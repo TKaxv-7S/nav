@@ -12,6 +12,7 @@ import GithubLink from "../GithubLink";
 import DarkSwitch from "../DarkSwitch";
 
 import { toggleJumpTarget } from "../../utils/setting";
+import { normalizeUrl } from "../../utils/url";
 import LockScreen from "../LockScreen";
 import { InboxIcon } from "@heroicons/react/24/outline";
 
@@ -188,7 +189,7 @@ const Content = (props: any) => {
     const cards = filteredDataRef.current;
     if (ev.keyCode === 13) {
       if (cards && cards.length) {
-        window.open(cards[0]?.url, "_blank");
+        window.open(normalizeUrl(cards[0]?.url), "_blank");
         resetSearch();
       }
     }
@@ -198,7 +199,7 @@ const Content = (props: any) => {
       ev.preventDefault()
       const index = Number(ev.key) - 1;
       if (index >= 0 && index < cards.length) {
-        window.open(cards[index]?.url, "_blank");
+        window.open(normalizeUrl(cards[index]?.url), "_blank");
         resetSearch();
       }
     }

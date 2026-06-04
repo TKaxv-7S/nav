@@ -19,6 +19,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Bars3Icon, PencilSquareIcon, TrashIcon, CloudArrowUpIcon, LinkIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 import { getOptions, mutiSearch } from "../../../utils/admin";
+import { normalizeUrl } from "../../../utils/url";
 import {
   fetchAddTool,
   fetchBatchDeleteTools,
@@ -365,13 +366,6 @@ export const Tools = () => {
     setFormData({ ...record });
     setShowEdit(true);
   };
-
-  function normalizeUrl(url: string): string {
-    if (/^\d+$/.test(url) || /^:\d+$/.test(url)) {
-      return window.location.origin.replace(/:\d+$/, '') + (url.startsWith(':') ? url : ':' + url);
-    }
-    return url;
-  }
 
   const handleSave = async (isEdit: boolean) => {
     // Basic Validation

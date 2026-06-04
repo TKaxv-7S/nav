@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import clsx from "clsx";
 import { getJumpTarget } from "../../utils/setting";
+import { normalizeUrl } from "../../utils/url";
 import { ToolLogo } from "../ToolLogo";
 
 interface CardProps {
@@ -20,7 +21,7 @@ const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }: C
 
   return (
     <a
-      href={url === "toggleJumpTarget" ? undefined : url}
+      href={url === "toggleJumpTarget" ? undefined : normalizeUrl(url)}
       onClick={onClick}
       target={getJumpTarget() === "blank" ? "_blank" : "_self"}
       rel="noreferrer"
