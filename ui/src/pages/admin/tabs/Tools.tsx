@@ -125,24 +125,18 @@ const ToolModal = ({
   categoryOptions
 }: ToolModalProps) => {
   const { error } = useToast();
-  const [logoMode, setLogoMode] = useState<"google" | "url" | "upload">("google");
+  const [logoMode, setLogoMode] = useState<"url" | "upload">("url");
   const [tempUrl, setTempUrl] = useState("");
 
   // Initialize logo mode based on existing data
   useEffect(() => {
     if (isOpen) {
-      if (!formData.logo) {
-        setLogoMode("google");
-        setTempUrl("");
-      } else if (formData.logo.startsWith("data:")) {
+      if (formData.logo?.startsWith("data:")) {
         setLogoMode("upload");
-        setTempUrl("");
-      } else if (formData.logo.startsWith("https://t3.gstatic.cn/faviconV2")) {
-        setLogoMode("google");
         setTempUrl("");
       } else {
         setLogoMode("url");
-        setTempUrl(formData.logo);
+        setTempUrl(formData.logo || "");
       }
     }
   }, [isOpen]);
@@ -172,15 +166,7 @@ const ToolModal = ({
 
   const handleModeChange = (val: any) => {
     setLogoMode(val);
-    if (val === 'url') {
-      // Explicitly use current tempUrl
-      setFormData((prev: any) => ({ ...prev, logo: tempUrl }));
-    } else if (val === 'google') {
-      if (formData.url) {
-        const googleUrl = `https://t3.gstatic.cn/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(formData.url)}&size=64`;
-        setFormData((prev: any) => ({ ...prev, logo: googleUrl }));
-      }
-    } else if (val === 'upload') {
+    if (val === 'upload') {
       setFormData((prev: any) => ({ ...prev, logo: "" }));
     }
   }
@@ -210,14 +196,7 @@ const ToolModal = ({
         <FormItem label="网址">
           <Input
             value={formData.url}
-            onChange={e => {
-              const newUrl = e.target.value;
-              let newLogo = formData.logo;
-              if (logoMode === "google") {
-                newLogo = `https://t3.gstatic.cn/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(newUrl)}&size=64`;
-              }
-              setFormData({ ...formData, url: newUrl, logo: newLogo });
-            }}
+            onChange={e => setFormData({ ...formData, url: e.target.value })}
             placeholder="https://"
           />
         </FormItem>
@@ -226,7 +205,6 @@ const ToolModal = ({
             <Select
               value={logoMode}
               options={[
-                { label: "Google Favicon", value: "google" },
                 { label: "手动输入 URL", value: "url" },
                 { label: "上传图片", value: "upload" },
               ]}
@@ -388,12 +366,21 @@ export const Tools = () => {
     setShowEdit(true);
   };
 
+  function normalizeUrl(url: string): string {
+    if (/^\d+$/.test(url) || /^:\d+$/.test(url)) {
+      return window.location.origin.replace(/:\d+$/, '') + (url.startsWith(':') ? url : ':' + url);
+    }
+    return url;
+  }
+
   const handleSave = async (isEdit: boolean) => {
     // Basic Validation
     if (!formData.name || !formData.url || !formData.catelog) {
       error("请填写必要信息 (名称, 网址, 分类)");
       return;
     }
+
+    let saveData = { ...formData, url: normalizeUrl(formData.url) };
 
     setRequestLoading(true);
     try {

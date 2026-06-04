@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ExitIcon, StarFilledIcon } from '@radix-ui/react-icons';
 import { MenuItem, Sidebar } from './components/sidebar';
 import "./index.css"
@@ -12,6 +12,10 @@ import {
 import { useOnce } from '../../utils/useOnce';
 
 import DarkSwitch from '../../components/DarkSwitch';
+import { Tools } from './tabs/Tools';
+import { Catelog } from './tabs/Catelog';
+import { ApiToken } from './tabs/ApiToken';
+import { Setting } from './tabs/Setting';
 
 const menuItems: MenuItem[] = [
   {
@@ -41,7 +45,6 @@ const menuItems: MenuItem[] = [
 ];
 
 export const AdminPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [currentKey, setCurrentKey] = useState('tools');
 
@@ -51,16 +54,6 @@ export const AdminPage = () => {
     }
   }, []);
 
-  // 根据当前路径设置选中的菜单项
-  useEffect(() => {
-    const pathname = location.pathname;
-    const currentItem = menuItems.find(item => pathname.includes(item.key));
-    if (currentItem) {
-      setCurrentKey(currentItem.key);
-    }
-  }, [location]);
-
-  // 处理退出登录
   const handleLogout = () => {
     localStorage.removeItem('_token');
     navigate('/');
@@ -68,7 +61,6 @@ export const AdminPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -96,19 +88,26 @@ export const AdminPage = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="flex flex-1 w-full h-[calc(100vh-64px)]">
-        {/* Sidebar */}
         <Sidebar items={menuItems} currentKey={currentKey} onChange={setCurrentKey} />
 
-        {/* Main Content Area */}
         <main className="flex-1 overflow-auto">
           <div className="p-4 h-full">
-            <Outlet />
+            <div style={{ display: currentKey === 'tools' ? 'block' : 'none' }}>
+              <Tools />
+            </div>
+            <div style={{ display: currentKey === 'categories' ? 'block' : 'none' }}>
+              <Catelog />
+            </div>
+            <div style={{ display: currentKey === 'api-token' ? 'block' : 'none' }}>
+              <ApiToken />
+            </div>
+            <div style={{ display: currentKey === 'settings' ? 'block' : 'none' }}>
+              <Setting />
+            </div>
           </div>
         </main>
       </div>
-      {/* Persistent Theme Switch & Github Link */}
       <div className="fixed bottom-4 right-4 z-50 flex gap-4">
         <DarkSwitch showGithub={false} />
       </div>

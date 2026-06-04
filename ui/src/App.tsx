@@ -8,12 +8,6 @@ const Home = React.lazy(() => import('./pages/Home'));
 const AdminPage = React.lazy(() => import('./pages/admin').then(module => ({ default: module.AdminPage })));
 const Login = React.lazy(() => import('./pages/Login'));
 
-// 懒加载管理后台的子页面
-const Tools = React.lazy(() => import('./pages/admin/tabs/Tools').then(module => ({ default: module.Tools })));
-const Catelog = React.lazy(() => import('./pages/admin/tabs/Catelog').then(module => ({ default: module.Catelog })));
-const ApiToken = React.lazy(() => import('./pages/admin/tabs/ApiToken').then(module => ({ default: module.ApiToken })));
-const Setting = React.lazy(() => import('./pages/admin/tabs/Setting').then(module => ({ default: module.Setting })));
-
 // 加载中的占位组件
 const LoadingFallback = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -56,13 +50,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminPage />}>
-            <Route index element={<Tools />} />
-            <Route path="tools" element={<Tools />} />
-            <Route path="categories" element={<Catelog />} />
-            <Route path="api-token" element={<ApiToken />} />
-            <Route path="settings" element={<Setting />} />
-          </Route>
+          <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
       </Suspense>
     </Router>
