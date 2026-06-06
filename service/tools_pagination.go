@@ -32,7 +32,7 @@ func GetToolsPage(page, pageSize int, keyword string, catelog string) ([]types.T
 	}
 
 	// Data query
-	dataSQL := "SELECT id,name,url,logo,catelog,desc,sort,hide FROM nav_table " + whereClause + " ORDER BY sort LIMIT ? OFFSET ?"
+	dataSQL := "SELECT id,name,url,logo,catelog,desc,head,sort,hide FROM nav_table " + whereClause + " ORDER BY sort LIMIT ? OFFSET ?"
 	args = append(args, pageSize, offset)
 
 	results := make([]types.Tool, 0)
@@ -47,7 +47,7 @@ func GetToolsPage(page, pageSize int, keyword string, catelog string) ([]types.T
 		var tool types.Tool
 		var hide interface{}
 		var sort interface{}
-		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &sort, &hide)
+		err = rows.Scan(&tool.Id, &tool.Name, &tool.Url, &tool.Logo, &tool.Catelog, &tool.Desc, &tool.Head, &sort, &hide)
 		if hide == nil {
 			tool.Hide = false
 		} else {

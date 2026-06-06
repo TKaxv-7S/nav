@@ -41,6 +41,7 @@ type Tool struct {
 	Logo    string `json:"logo"`
 	Catelog string `json:"catelog"`
 	Desc    string `json:"desc"`
+	Head    string `json:"head"`
 	Sort    int    `json:"sort"`
 	Hide    bool   `json:"hide"`
 }

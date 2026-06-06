@@ -44,18 +44,18 @@ func InitDB() {
 	utils.CheckErr(err)
 	// setting 表
 	sql_create_table = `
-	CREATE TABLE IF NOT EXISTS nav_setting (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		favicon TEXT,
-		title TEXT,
-		govRecord TEXT,
-		logo192 TEXT,
-		logo512 TEXT,
-		hideAdmin BOOLEAN,
-		hideGithub BOOLEAN,
-		jumpTargetBlank BOOLEAN
-	);
-	`
+		CREATE TABLE IF NOT EXISTS nav_setting (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			favicon TEXT,
+			title TEXT,
+			govRecord TEXT,
+			logo192 TEXT,
+			logo512 TEXT,
+			hideAdmin BOOLEAN,
+			hideGithub BOOLEAN,
+			jumpTargetBlank BOOLEAN
+		);
+		`
 	_, err = DB.Exec(sql_create_table)
 	utils.CheckErr(err)
 	// 检查并添加列
@@ -115,6 +115,11 @@ func InitDB() {
 	// tools数据表结构升级-20230627
 	if !columnExists("nav_table", "hide") {
 		DB.Exec(`ALTER TABLE nav_table ADD COLUMN hide BOOLEAN;`)
+	}
+
+	// tools数据表结构升级-20260607
+	if !columnExists("nav_table", "head") {
+		DB.Exec(`ALTER TABLE nav_table ADD COLUMN head TEXT;`)
 	}
 
 	// 分类表
