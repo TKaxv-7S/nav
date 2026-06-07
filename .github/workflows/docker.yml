@@ -5,12 +5,18 @@ on:
     tags:
       - "v*"
 
+env:
+  GIT_SSL_NO_VERIFY: true
+
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.BUILD_PULL_TOKEN }}
+          fetch-depth: 0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
