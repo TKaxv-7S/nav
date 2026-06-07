@@ -271,9 +271,29 @@ const ToolModal = ({
         <FormItem label="隐藏">
           <Switch checked={!!formData.hide} onChange={val => setFormData({ ...formData, hide: val })} />
         </FormItem>
-        <FormItem label="请求头" className="md:col-span-2 items-start">
-          <div className="flex flex-col gap-2">
-            <p className="text-xs text-gray-500 dark:text-gray-400">为工具添加自定义请求头（JSON 格式，可選）</p>
+         <FormItem label="请求类型">
+           <Select
+             value={formData.reqType || 'page'}
+             options={[
+               { label: "頁面", value: "page" },
+               { label: "接口", value: "api" },
+             ]}
+             onChange={val => setFormData({ ...formData, reqType: val })}
+           />
+         </FormItem>
+         <FormItem label="请求方式">
+           <Select
+             value={formData.reqMethod || 'GET'}
+             options={[
+               { label: "GET", value: "GET" },
+               { label: "POST", value: "POST" },
+             ]}
+             onChange={val => setFormData({ ...formData, reqMethod: val })}
+           />
+         </FormItem>
+         <FormItem label="请求头" className="md:col-span-2 items-start">
+           <div className="flex flex-col gap-2">
+             <p className="text-xs text-gray-500 dark:text-gray-400">仅接口类型生效，自定义请求头（JSON 格式）</p>
             <textarea
               rows={4}
               className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -361,6 +381,8 @@ export const Tools = () => {
     setFormData({
       sort: 1,
       hide: false,
+      reqType: "page",
+      reqMethod: "GET",
       name: "",
       url: "",
       logo: "",
@@ -387,7 +409,7 @@ export const Tools = () => {
       return;
     }
 
-    let saveData = { ...formData, url: normalizeUrl(formData.url) };
+    let saveData = { ...formData };
 
     setRequestLoading(true);
     try {

@@ -122,6 +122,14 @@ func InitDB() {
 		DB.Exec(`ALTER TABLE nav_table ADD COLUMN head TEXT;`)
 	}
 
+	// 添加请求类型和请求方式字段
+	if !columnExists("nav_table", "req_type") {
+		DB.Exec(`ALTER TABLE nav_table ADD COLUMN req_type TEXT DEFAULT 'page';`)
+	}
+	if !columnExists("nav_table", "req_method") {
+		DB.Exec(`ALTER TABLE nav_table ADD COLUMN req_method TEXT DEFAULT 'GET';`)
+	}
+
 	// 分类表
 	sql_create_table = `
 		CREATE TABLE IF NOT EXISTS nav_catelog (

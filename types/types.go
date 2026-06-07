@@ -35,15 +35,17 @@ type Img struct {
 }
 
 type Tool struct {
-	Id      int    `json:"id"`
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Logo    string `json:"logo"`
-	Catelog string `json:"catelog"`
-	Desc    string `json:"desc"`
-	Head    string `json:"head"`
-	Sort    int    `json:"sort"`
-	Hide    bool   `json:"hide"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Url      string `json:"url"`
+	Logo     string `json:"logo"`
+	Catelog  string `json:"catelog"`
+	Desc     string `json:"desc"`
+	ReqType  string `json:"reqType"`
+	ReqMethod string `json:"reqMethod"`
+	Head     string `json:"head"`
+	Sort     int    `json:"sort"`
+	Hide     bool   `json:"hide"`
 }
 
 type Catelog struct {

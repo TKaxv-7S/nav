@@ -10,19 +10,52 @@ interface CardProps {
   des: string;
   logo: string;
   catelog: string;
+  head?: string;
+  reqType?: string;
+  reqMethod?: string;
   onClick: () => void;
   index: number;
   isSearching: boolean;
 }
 
-const Card = ({ title, url, des, logo, catelog, onClick, index, isSearching }: CardProps) => {
-
+const Card = ({ title, url, des, logo, catelog, head, reqType, reqMethod, onClick, index, isSearching }: CardProps) => {
   const showNumIndex = index < 10 && isSearching;
+  const isApiType = reqType === "api";
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (url === "toggleJumpTarget") {
+      onClick();
+      return;
+    }
+
+    if (isApiType) {
+      e.preventDefault();
+      onClick();
+      const normalizedUrl = normalizeUrl(url);
+      const headers: Record<string, string> = {};
+      if (head) {
+        try {
+          const parsed = JSON.parse(head);
+          parsed.forEach((h: any) => {
+            headers[h.key] = h.value;
+          });
+        } catch (_) {}
+      }
+      fetch(normalizedUrl, {
+        method: reqMethod || "GET",
+        headers,
+        mode: "no-cors",
+      });
+      return;
+    }
+
+    onClick();
+  };
 
   return (
     <a
-      href={url === "toggleJumpTarget" ? undefined : normalizeUrl(url)}
-      onClick={onClick}
+      href={isApiType || url === "toggleJumpTarget" ? undefined : normalizeUrl(url)}
+      onClick={handleClick}
       target={getJumpTarget() === "blank" ? "_blank" : "_self"}
       rel="noreferrer"
       className={clsx("van-card", styles.container)}
@@ -60,8 +93,6 @@ const styles = {
   container: "group relative flex w-full cursor-pointer flex-col items-center p-4 rounded-xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:bg-gray-800 sm:flex-row sm:items-center sm:text-left",
   index: "absolute right-2 top-2 font-mono text-xs text-gray-300 dark:text-gray-600",
   iconWrapper: "mb-2 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-700 overflow-hidden sm:mb-0 sm:mr-4 sm:h-12 sm:w-12",
-  // iconPlaceholder: removed
-  // iconImg: removed
   content: "flex flex-col items-center min-w-0 flex-1 w-full sm:items-start",
   header: "flex flex-col items-center gap-1 w-full sm:flex-row sm:justify-between sm:w-full",
   title: "truncate text-sm text-gray-900 dark:text-gray-100 w-full text-center sm:w-auto sm:text-left sm:flex-1",

@@ -222,6 +222,9 @@ const Content = (props: any) => {
         <CardV2
           title={item.name}
           url={item.url}
+          head={item.head}
+          reqType={item.reqType}
+          reqMethod={item.reqMethod}
           des={item.desc}
           logo={item.logo}
           key={item.id}
